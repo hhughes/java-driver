@@ -168,6 +168,7 @@ public class BasicLoadBalancingPolicy implements LoadBalancingPolicy {
         // This includes state == UNKNOWN. If the node turns out to be unreachable, this will be
         // detected when we try to open a pool to it, it will get marked down and this will be
         // signaled back to this policy, which will then remove it from the live set.
+        LOG.debug("[{}] {} added to initial live set", logPrefix, node);
         liveNodes.add(node);
       }
     }
