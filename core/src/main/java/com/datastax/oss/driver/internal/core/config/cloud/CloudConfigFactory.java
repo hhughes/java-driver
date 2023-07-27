@@ -226,6 +226,10 @@ public class CloudConfigFactory {
       try {
         return new BufferedReader(
             new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+      } catch (FileNotFoundException e) {
+        throw new IllegalStateException(
+            "Metadata service request path not found. Please make sure the metadata service url is correct",
+            e);
       } catch (IOException ioe) {
         throw new IllegalStateException(
             "Unable to read data from cloud metadata service. Please make sure your cluster is not parked or terminated",
@@ -238,10 +242,6 @@ public class CloudConfigFactory {
     } catch (UnknownHostException e) {
       throw new IllegalStateException(
           "Unable to resolve host for cloud metadata service. Please make sure your cluster is not terminated",
-          e);
-    } catch (FileNotFoundException e) {
-      throw new IllegalStateException(
-          "Metadata service request path not found. Please make sure the metadata service url is correct",
           e);
     }
   }
