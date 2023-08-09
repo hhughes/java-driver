@@ -195,7 +195,6 @@ public class ControlConnectionTest extends ControlConnectionTestBase {
     verify(eventBus, VERIFY_TIMEOUT).fire(ChannelEvent.channelOpened(node1));
 
     // When
-    mockQueryPlan(node2);
     eventBus.fire(new DistanceEvent(NodeDistance.IGNORED, node1));
 
     // Then
@@ -240,7 +239,6 @@ public class ControlConnectionTest extends ControlConnectionTestBase {
     verify(eventBus, VERIFY_TIMEOUT).fire(ChannelEvent.channelOpened(node1));
 
     // When
-    mockQueryPlan(node2);
     eventBus.fire(event);
 
     // Then

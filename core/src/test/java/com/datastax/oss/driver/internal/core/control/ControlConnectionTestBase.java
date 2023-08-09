@@ -121,7 +121,7 @@ abstract class ControlConnectionTestBase {
     mockQueryPlan(node1, node2);
 
     when(metadataManager.refreshNodes()).thenReturn(CompletableFuture.completedFuture(null));
-    when(metadataManager.refreshSchema(anyString(), anyBoolean(), anyBoolean()))
+    when(metadataManager.refreshSchema(any(), anyBoolean(), anyBoolean()))
         .thenReturn(CompletableFuture.completedFuture(null));
     when(context.getMetadataManager()).thenReturn(metadataManager);
 
