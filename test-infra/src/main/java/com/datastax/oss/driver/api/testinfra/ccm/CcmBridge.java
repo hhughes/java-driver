@@ -383,7 +383,11 @@ public class CcmBridge implements AutoCloseable {
       // force it to use java8 by mapping JAVA8_HOME to JAVA_HOME
       Map<String, String> ccmEnv = null;
       String javaVersion = System.getProperty("java.version");
-      if (DSE_ENABLEMENT && !javaVersion.startsWith("1.8")) {
+      boolean setJavaHomeToJava8HomeForCcm =
+          Optional.ofNullable(System.getProperty("setJavaHomeToJava8Home"))
+              .map(Boolean::parseBoolean)
+              .orElse(false);
+      if (setJavaHomeToJava8HomeForCcm && DSE_ENABLEMENT && !javaVersion.startsWith("1.8")) {
         String java8Home = System.getenv("JAVA8_HOME");
         if (java8Home != null && !java8Home.isEmpty()) {
           ccmEnv = EnvironmentUtils.getProcEnvironment();
