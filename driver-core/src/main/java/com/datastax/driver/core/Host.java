@@ -501,7 +501,9 @@ public class Host {
 
   @Override
   public String toString() {
-    return endPoint.toString();
+    return String.format(
+        "hostId=%s, endPoint=%s, broadcastRpcAddress=%s, listenSocketAddress=%s",
+        hostId, endPoint, broadcastRpcAddress, listenSocketAddress);
   }
 
   void setDown() {

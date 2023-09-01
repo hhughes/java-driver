@@ -2500,6 +2500,9 @@ public class Cluster implements Closeable {
           logger.info("Cassandra host {} removed", host);
           triggerOnRemove(host);
         }
+      } else {
+        logger.debug(
+            "Tried to remove host {} when refrshing node list but it was already gone", host);
       }
     }
 
@@ -3070,6 +3073,7 @@ public class Cluster implements Closeable {
 
       @Override
       public ListenableFuture<?> deliver(List<NodeRefreshRequest> events) {
+        logger.debug("Recevied delivery of node refresh request events: {}", events);
         Map<InetSocketAddress, HostEvent> hosts = new HashMap<InetSocketAddress, HostEvent>();
         // only keep the last event for each host
         for (NodeRefreshRequest req : events) {
@@ -3113,10 +3117,16 @@ public class Cluster implements Closeable {
               break;
             case REMOVED:
               Host removedHost = metadata.getHost(address);
-              if (removedHost != null) futures.add(execute(hostRemoved(removedHost)));
+              if (removedHost != null) {
+                logger.debug("Enqueue host removal {}", removedHost);
+                futures.add(execute(hostRemoved(removedHost)));
+              } else {
+                logger.debug("Ignoring removed event on unknown host {}", address);
+              }
               break;
           }
         }
+        logger.debug("Returning {} event processing futures", futures.size());
         return Futures.allAsList(futures);
       }
 
@@ -3189,10 +3199,15 @@ public class Cluster implements Closeable {
         return new ExceptionCatchingRunnable() {
           @Override
           public void runMayThrow() throws Exception {
+            logger.info("Attempting to remove host {}", host);
             if (metadata.remove(host)) {
               logger.info("Cassandra host {} removed", host);
               onRemove(host);
               submitNodeListRefresh();
+            } else {
+              logger.debug(
+                  "Tried to remove host {} from node refresh callback but it was already gone",
+                  host);
             }
           }
         };

@@ -253,6 +253,7 @@ abstract class EventDebouncer<T> {
           new FutureCallback<Object>() {
             @Override
             public void onSuccess(Object result) {
+              logger.trace("{} debouncer: event processing completed {}", name, toDeliver);
               for (SettableFuture<Void> future : futures) future.set(null);
             }
 

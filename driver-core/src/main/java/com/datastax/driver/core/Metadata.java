@@ -175,10 +175,12 @@ public class Metadata {
    * @return the previous host associated with this id, or {@code null} if there was no such host.
    */
   Host addIfAbsent(Host host) {
+    logger.debug("Adding host {} to metadata", host);
     return hosts.putIfAbsent(host.getHostId(), host);
   }
 
   boolean remove(Host host) {
+    logger.debug("Removing host {} from metadata", host);
     return hosts.remove(host.getHostId()) != null;
   }
 

@@ -1367,6 +1367,11 @@ class Connection {
       Iterator<ResponseHandler> iter = pending.values().iterator();
       while (iter.hasNext()) {
         ResponseHandler handler = iter.next();
+        logger.debug(
+            "[{}] erroring out streamId {} due to error {}",
+            Connection.this,
+            handler.streamId,
+            ce.getMessage());
         handler.cancelTimeout();
         handler.callback.onException(
             Connection.this, ce, System.nanoTime() - handler.startTime, handler.retryCount);
@@ -1457,6 +1462,7 @@ class Connection {
       // if the shutdown is forced. This is a no-op if there is no handler set anymore.
       dispatcher.errorOutAllHandler(new TransportException(endPoint, "Connection has been closed"));
 
+      logger.debug("{} calling connection.close()", Connection.this);
       ChannelFuture future = channel.close();
       future.addListener(
           new ChannelFutureListener() {
